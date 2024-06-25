@@ -1,0 +1,460 @@
+CREATE TABLE Movie1 (
+    title VARCHAR(100),
+    year INTEGER,
+    length INTEGER,
+    genre VARCHAR(50),
+    plot_outline varchar(30),
+    PRIMARY KEY (title, year)
+);
+
+CREATE TABLE ProductionCompany (
+    name VARCHAR(100)PRIMARY KEY,
+    address varchar(30));
+
+CREATE TABLE Actor1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    date_of_birth DATE
+);
+
+CREATE TABLE Director1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    date_of_birth DATE
+);
+
+CREATE TABLE Produces1 (
+    name VARCHAR(100),
+    title VARCHAR(100),
+    year INTEGER,
+    FOREIGN KEY (name) REFERENCES ProductionCompany(name),
+    FOREIGN KEY (title, year) REFERENCES Movie1(title, year)
+);
+
+CREATE TABLE ActsIn1 (
+    id INTEGER,
+    title VARCHAR(100),
+    year INTEGER,
+    role VARCHAR(100),
+    FOREIGN KEY (id) REFERENCES Actor1(id),
+    FOREIGN KEY (title, year) REFERENCES Movie1(title, year)
+);
+
+CREATE TABLE Directs (
+    id INTEGER,
+    title VARCHAR(100),
+    year INTEGER,
+    PRIMARY KEY (id, title, year),
+    FOREIGN KEY (id) REFERENCES Director1(id),
+    FOREIGN KEY (title, year) REFERENCES Movie1(title, year)
+); 
+
+-- Insert sample data
+INSERT INTO Movie (title, year, length, genre, plot_outline)
+VALUES
+INSERT INTO Movie1 VALUES('The Dark Knight', 2008, 152, 'Action', 'Batman fights ');
+INSERT INTO Movie1 VALUES    ('Inception', 2010, 148, 'Sci-Fi', 'A thief enters ');
+INSERT INTO Movie1 VALUES    ('The Shining', 1980, 144, 'Horror', 'A writer goes iel.');
+INSERT INTO Movie1 VALUES    ('The Exorcist', 1973, 122, 'Horror', 'A girl is possey.');
+INSERT INTO Movie1 VALUES    ('Avatar', 2009, 162, 'Sci-Fi', 'Humans colo.');
+ INSERT INTO Movie1 VALUES   ('The Godfather', 1972, 175, 'Crime', 'A mafia family drama.');
+INSERT INTO Movie1 VALUES    ('Titanic', 1997, 195, 'Romance', 'A tragic l');
+ INSERT INTO Movie1 VALUES   ('Jurassic Park', 1993, 127, 'Adventure', 'Dinosaurife.');
+
+INSERT INTO ProductionCompany (name, address)
+VALUES
+INSERT INTO ProductionCompany   VALUES ('Warner Bros.', 'Los Angeles, CA');
+INSERT INTO ProductionCompany  VALUES  ('Paramount Pictures', 'Hollywood, CA');
+INSERT INTO ProductionCompany   VALUES ('Universal Pictures', 'Universal City, CA');
+
+INSERT INTO Actor (name, date_of_birth)
+VALUES
+INSERT INTO Actor1 values  (1,'Leonardo DiCaprio','19-11-11');
+INSERT INTO Actor1 values  (2,'Jack Nicholson','19-may-22');
+INSERT INTO Actor1 values  (3,'eath Ledger','19-jan-04');
+INSERT INTO Actor1 values   (4,'Sigourney','19-jan-08');
+INSERT INTO Actor1 values   (5,'Marlon Brando','19-jan-03');
+
+INSERT INTO Director (name, date_of_birth)
+VALUES
+    (1,'Christopher Nolan', '1970-07-30'),
+    (2,'Stanley Kubrick', '1928-07-26'),
+    (3,'James Cameron', '14-08-16'),
+    ('Francis Ford Coppola', '19-04-07');
+
+INSERT INTO Produces (name, title, year)
+VALUES
+    ('Warner Bros.', 'The Dark Knight', 2008),
+    ('Warner Bros.', 'Inception', 2010),
+    ('Paramount Pictures', 'Titanic', 1997),
+    ('Universal Pictures', 'Jurassic Park', 1993);
+
+INSERT INTO ActsIn (id, title, year, role)
+VALUES
+    (1, 'Inception', 2010, 'Cobb'),
+    (1, 'Titanic', 1997, 'Jack Dawson'),
+    (2, 'The Shining', 1980, 'Jack Torrance'),
+    (3, 'The Dark Knight', 2008, 'Joker'),
+    (4, 'Avatar', 2009, 'Dr. Grace Augustine');
+
+INSERT INTO Directs (id, title, year)
+VALUES
+    (1, 'Inception', 2010),
+    (2, 'The Shining', 1980),
+    (3, 'The Dark Knight', 2008),
+    (4, 'Avatar', 2009);
+
+
+
+
+
+
+
+
+
+
+i. List the details of horror movies released in 2012 and directed by more than 2 directors.
+sql
+Copy code
+
+
+SELECT *
+FROM Movie m
+JOIN Directs d ON m.title = d.title AND m.year = d.year
+WHERE m.genre = 'Horror' AND m.year = 2012
+GROUP BY m.title, m.year
+HAVING COUNT(d.id) > 2;
+
+  
+ii. List the details of actors who acted in movies having same titles but released before 2000 and after 2010.
+sql
+Copy code
+
+SELECT DISTINCT a.*
+FROM Actor a
+JOIN ActsIn ai1 ON a.id = ai1.id
+JOIN ActsIn ai2 ON ai1.title = ai2.title AND ai1.year < ai2.year
+JOIN Movie m1 ON ai1.title = m1.title AND ai1.year = m1.year
+JOIN Movie m2 ON ai2.title = m2.title AND ai2.year = m2.year
+WHERE m1.year < 2000 AND m2.year > 2010;
+
+iii. List the details of production companies producing maximum movies.
+sql
+Copy code
+
+SELECT p.name, COUNT(pr.name) AS num_movies
+FROM ProductionCompany p
+JOIN Produces pr ON p.name = pr.name
+GROUP BY p.name
+ORDER BY num_movies DESC;
+
+
+iv. List the details of movies where director and actor have the same date of birth.
+sql
+Copy code
+SELECT m.title, m.year, d.name AS director_name, a.name AS actor_name, d.date_of_birth
+FROM Movie m
+JOIN Directs di ON m.title = di.title AND m.year = di.year
+JOIN Director d ON di.id = d.id
+JOIN ActsIn ai ON m.title = ai.title AND m.year = ai.year
+JOIN Actor a ON ai.id = a.id
+WHERE d.date_of_birth = a.date_of_birth;
+
+
+
+5) select d.name as directornmar from director d 
+join directs di on d.id=di.id
+join produces p on di.title=p.title and di.year
+where p.name='paramount;
+
+
+Student:
+CREATE TABLE STUDENT2(SNUM INT PRIMARY KEY, SNAME VARCHAR(10), MAJOR VARCHAR(10), 
+LEVEL1 VARCHAR(10),AGE INT);
+Faculty:
+CREATE TABLE FACULTY2(FID INT PRIMARY KEY, FNAME VARCHAR(10), DEPTID INT);
+Class:
+CREATE TABLE CLASS2(CNAME VARCHAR(10) PRIMARY KEY , MEETS_AT VARCHAR(10), ROOM VARCHAR(10), 
+FID INT, FOREIGN KEY(FID) REFERENCES FACULTY2(FID));
+
+Enrolled:
+CREATE TABLE ENROLLED2(SNUM INT, CNAME VARCHAR(10),
+FOREIGN KEY(SNUM) REFERENCES STUDENT2(SNUM), FOREIGN KEY(CNAME) REFERENCES 
+CLASS2(CNAME));
+
+
+
+INSERT INTO STUDENT2 VALUES(101,'FRED','SCIENCE','JR',19);
+INSERT INTO STUDENT2 VALUES(102,'JENNY','MATHS','JR',18);
+INSERT INTO STUDENT2 VALUES(103,'JERRY','HISTORY','SR',21);
+INSERT INTO STUDENT2 VALUES(104,'SARA','SCIENCE','SR',22);
+INSERT INTO STUDENT2 VALUES(105,'LARA','HISTORY','JR',20);
+
+INSERT INTO FACULTY2 VALUES(1,'I.JOHN',501);
+INSERT INTO FACULTY2 VALUES(2,'RAMESH',502);
+INSERT INTO FACULTY2 VALUES(3,'PRIYA',501);
+INSERT INTO FACULTY2 VALUES(4,'POOJA',503);
+INSERT INTO FACULTY2 VALUES(5,'SHIV',503);
+
+
+INSERT INTO CLASS2 VALUES('C1','ONE','R1',1);
+INSERT INTO CLASS2 VALUES('C2','TWO','R2',1);
+INSERT INTO CLASS2 VALUES('C3','THREE','R3',5);
+INSERT INTO CLASS2 VALUES('C4','FOUR','R1',3);
+INSERT INTO CLASS2 VALUES('C5','FIVE','R2',2);
+
+
+INSERT INTO ENROLLED2 VALUES(101,'C1');
+INSERT INTO ENROLLED2 VALUES(101,'C5');
+INSERT INTO ENROLLED2 VALUES(102,'C2');
+INSERT INTO ENROLLED2 VALUES(102,'C4');
+INSERT INTO ENROLLED2 VALUES(103,'C3');
+INSERT INTO ENROLLED2 VALUES(103,'C4');
+INSERT INTO ENROLLED2 VALUES(105,'C5');
+
+3.Find the names pf all Juniors (level=JR) who are enrolled in a class taught by I.John.
+
+
+SELECT S.SNAME FROM STUDENT2 S,FACULTY2 F,CLASS2 C, ENROLLED2 E WHERE 
+F.FNAME='I.JOHN' AND S.LEVEL1='JR' AND F.FID=C.FID AND C.CNAME=E.CNAME AND 
+S.SNUM=E.SNUM;
+
+4.For each level, print the level and the average age of students for that level.
+
+SELECT LEVEL1,AVG(AGE) FROM STUDENT2 GROUP BY LEVEL1;
+
+
+5.Find the names of students not enrolled in any class. 
+
+SELECT SNAME FROM STUDENT2 
+WHERE SNUM NOT IN (SELECT SNUM FROM ENROLLED2);
+
+
+INSURANCE:
+
+create table person2(driverid varchar(5) primary key,name varchar(10),address varchar(10));
+
+
+create table car2(regno varchar(5) primary key,model varchar(10),year int);
+
+create table accident(repno int primary key,dat date,location varchar(10));
+
+create table owns(driverid varchar(5),regno varchar(5),foreign key(driverid) references 
+person2(driverid),foreign key(regno) references car2(regno));
+
+
+create table participated(driverid varchar(5),regno varchar(5),repno int,damageamt 
+int,foreign key(driverid)references person2(driverid),foreign key(regno) references 
+car2(regno),foreign key(repno) references accident(repno));
+
+
+INSERT INTO PERSON2 VALUES('D1','JOHN','HUBLI');
+INSERT INTO PERSON2 VALUES('D2','JACK','BELGAUM'); 
+INSERT INTO PERSON2 VALUES('D3','FRED','DHARWAD'); 
+INSERT INTO PERSON2 VALUES('D4','PRIYA','BANGALORE');
+INSERT INTO PERSON2 VALUES('D5','JESSY','HUBLI');
+
+
+
+INSERT INTO CAR2 VALUES('C1','BMW',2019);
+INSERT INTO CAR2 VALUES('C2','HONDA CITY',2019);
+INSERT INTO CAR2 VALUES('C3','AUDI',2021);
+INSERT INTO CAR2 VALUES('C4','VOLKSWAGEN',2022); 
+INSERT INTO CAR2 VALUES('C5','AUDI',2022);
+INSERT INTO CAR2 VALUES('C6','BMW',2021);
+INSERT INTO CAR2 VALUES('C7','JAGUAR',2002);
+
+
+
+INSERT INTO ACCIDENT VALUES(1,'10-JAN-23','HUBLI');
+INSERT INTO ACCIDENT VALUES(2,'15-FEB-24','DHARWAD'); 
+INSERT INTO ACCIDENT VALUES(3,'10-MAR-23','BANGALORE');
+INSERT INTO ACCIDENT VALUES(4,'18-APR-22','MYSORE');
+INSERT INTO ACCIDENT VALUES(5,'20-MAY-22','BANGALORE');
+INSERT INTO ACCIDENT VALUES(12,'30-JULY-23','HUBLI');
+
+
+INSERT INTO OWNS VALUES('D1','C1');
+INSERT INTO OWNS VALUES('D1','C5');
+INSERT INTO OWNS VALUES('D2','C4');
+INSERT INTO OWNS VALUES('D3','C2');
+INSERT INTO OWNS VALUES('D4','C3');
+INSERT INTO OWNS VALUES('D5','C6');
+INSERT INTO OWNS VALUES('D5','C7');
+
+INSERT INTO PARTICIPATED VALUES('D1','C2',1,10000);
+INSERT INTO PARTICIPATED VALUES('D2','C4',2,12000);
+INSERT INTO PARTICIPATED VALUES('D4','C3',2,10000);
+INSERT INTO PARTICIPATED VALUES('D3','C2',3,15000);
+INSERT INTO PARTICIPATED VALUES('D1','C1',4,10000);
+INSERT INTO PARTICIPATED VALUES('D2','C4',5,12000);
+INSERT INTO PARTICIPATED VALUES('D1','C5',12,100);
+
+
+UPDATE PARTICIPATED SET DAMAGEAMT=25000 WHERE REGNO='C5' AND 
+REPNO=12;
+
+INSERT INTO ACCIDENT VALUES(9,'2-jun-22','BANGALORE');
+
+SELECT COUNT(O.DRIVERID) FROM OWNS O,ACCIDENT A,PARTICIPATED P WHERE 
+O.REGNO=P.REGNO AND A.REPNO=P.REPNO AND A.DAT LIKE '%22%';
+
+
+SELECT COUNT(P.REPNO) FROM PARTICIPATED P ,CAR2 C WHERE 
+C.REGNO=P.REGNO AND C.MODEL LIKE 'BMW';
+
+
+
+
+
+
+BANK:
+CREATE TABLE Bank1 (
+    BankID INT PRIMARY KEY,
+    Name VARCHAR (100) NOT NULL,
+    Address VARCHAR(255),
+    Phone VARCHAR(20)
+);
+CREATE TABLE Branch1 (
+    BranchID INT PRIMARY KEY,
+    BankID INT,
+    Name VARCHAR(100) NOT NULL,
+    Address VARCHAR(255),
+    Phone VARCHAR(20),
+    City VARCHAR(100),
+    FOREIGN KEY (BankID) REFERENCES Bank1(BankID)
+);
+
+CREATE TABLE Customer (
+    SSN VARCHAR(9) PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    Address VARCHAR(255),
+    Phone VARCHAR(20)
+);
+
+CREATE TABLE Account (
+    AccountID INT PRIMARY KEY,
+    BranchID INT,
+    Type VARCHAR(50),
+    Balance DECIMAL(15, 2),
+    FOREIGN KEY (BranchID) REFERENCES Branch1(BranchID)
+);
+
+CREATE TABLE CustomerAccount (
+    SSN VARCHAR(9),
+    AccountID INT,
+    FOREIGN KEY (SSN) REFERENCES Customer(SSN),
+    FOREIGN KEY (AccountID) REFERENCES Account(AccountID)
+);
+
+CREATE TABLE Loan (
+    LoanID INT PRIMARY KEY,
+    BranchID INT,
+    Type VARCHAR(50),
+    Amount DECIMAL(15, 2),
+    Duration INT,
+    InterestRate DECIMAL(5, 2),
+    FOREIGN KEY (BranchID) REFERENCES Branch1(BranchID)
+);
+
+CREATE TABLE CustomerLoan (
+    SSN VARCHAR(9),
+    LoanID INT,
+    FOREIGN KEY (SSN) REFERENCES Customer(SSN),
+    FOREIGN KEY (LoanID) REFERENCES Loan(LoanID)
+);
+
+INSERT INTO Bank1 VALUES (1, 'SBI', 'Mumbai', '022-12345678');
+INSERT INTO Bank1 VALUES (2, 'ICICI', 'Mumbai', '022-87654321');
+INSERT INTO Bank1 VALUES (3, 'HDFC', 'Mumbai', '022-11112222');
+INSERT INTO Bank1 VALUES (4, 'Axis', 'Mumbai', '022-22221111');
+INSERT INTO Bank1 VALUES (5, 'pnb', 'Mumbai', '022-33334444');
+
+INSERT INTO Branch1 VALUES (1, 1, 'SBI', 'Bangalore', '080-12345678', 'Bangalore');
+INSERT INTO Branch1 VALUES (2, 2, 'ICICI', 'Mumbai', '080-23456789', 'Mumbai');
+INSERT INTO Branch1 VALUES (3, 3, 'HDFC', 'Mumbai', '080-98765432', 'Mumbai');
+INSERT INTO Branch1 VALUES (4, 4, 'Axis', 'Bangalore', '080-55556666', 'Bangalore');
+INSERT INTO Branch1 VALUES (5, 5, 'pnb', 'Mumbai', '080-66667777', 'Mumbai');
+
+INSERT INTO Customer VALUES ('123456789', 'Alice', '123StBangalore', '080-11111111');
+INSERT INTO Customer VALUES ('987654321', 'Bob', '456Oak', '080-22222222');
+INSERT INTO Customer VALUES ('456789123', 'Charlie', '789Pine', '080-33333333');
+INSERT INTO Customer VALUES ('789123456', 'David', '321Maple', '080-44444444');
+INSERT INTO Customer VALUES ('111111111', 'Eve', '123Palm', '080-55555555');
+
+INSERT INTO Account VALUES (1, 1, 'Savings', 10000);
+INSERT INTO Account VALUES (2, 2, 'Savings', 20000);
+INSERT INTO Account VALUES (3, 3, 'Checking', 15000);
+INSERT INTO Account VALUES (4, 4, 'Checking', 25000);
+INSERT INTO Account VALUES (5, 5, 'joint', 30000);
+
+INSERT INTO CustomerAccount VALUES ('123456789', 1);
+INSERT INTO CustomerAccount VALUES ('987654321', 2);
+INSERT INTO CustomerAccount VALUES ('456789123', 3);
+INSERT INTO CustomerAccount VALUES ('789123456', 4);
+INSERT INTO CustomerAccount VALUES ('111111111', 5);
+
+INSERT INTO Loan VALUES (1, 1, 'Home Loan', 500000, 240, 6);
+INSERT INTO Loan VALUES (2, 2, 'Car Loan', 200000, 60, 7);
+INSERT INTO Loan VALUES (3, 3, 'Education Loan', 700000, 120, 5);
+INSERT INTO Loan VALUES (4, 4, 'Personal Loan', 400000, 36, 9);
+INSERT INTO Loan VALUES (5, 5, 'Home Loan', 600000, 240, 6);
+
+
+INSERT INTO customerloan VALUES ('123456789', 1);
+INSERT INTO customerloan VALUES ('987654321', 2);
+INSERT INTO customerloan  VALUES ('456789123', 3);
+INSERT INTO customerloan VALUES ('789123456', 4);
+INSERT INTO customerloan VALUES ('111111111', 5);
+
+
+
+
+
+
+
+a. List the details of customers who have a joint account and also have at least one loan 
+SELECT DISTINCT c.*
+FROM Customer c
+JOIN CustomerAccount ca ON c.SSN = ca.SSN
+JOIN Account  a ON a.AccountID = ca.AccountID
+JOIN CustomerLoan cl ON c.SSN = cl.SSN
+WHERE a.Type = 'joint';
+
+select distinct c.* from customer c, account a ,customeraccount ca,customerloan cl where c.ssn=ca.ssn and ca.accountid=a.accountid and c.ssn=cl.ssn and a.type='joint';
+
+b. List the details of the branch that has given the maximum loan
+SELECT *
+FROM (
+    SELECT b.*, SUM(l.Amount) AS TotalLoanAmount
+    FROM Branch1 b
+    JOIN Loan l ON b.BranchID = l.BranchID
+    GROUP BY b.BranchID, b.BankID, b.Name, b.Address, b.Phone, b.City
+    ORDER BY SUM(l.Amount) DESC
+)
+WHERE ROWNUM = 1;
+
+c. List the details of savings accounts opened in the SBI branches located at Bangalore
+SELECT a.*
+FROM Account a
+JOIN Branch1 b ON a.BranchID = b.BranchID
+JOIN Bank1 k ON b.BankID = k.BankID
+WHERE k.Name = 'SBI' AND b.City = 'Bangalore' AND a.Type = 'Savings';
+
+d. List the name of branch along with its bank name and total amount of loan given by it
+
+SELECT b.Name AS BranchName, k.Name AS BankName, SUM(l.Amount) AS TotalLoanAmount
+FROM Branch1 b
+JOIN Bank1 k ON b.BankID = k.BankID
+JOIN Loan l ON b.BranchID = l.BranchID
+GROUP BY b.Name, k.Name;
+
+e. Retrieve the names of customers who have accounts in all the branches located in a specific city (e.g., Bangalore)
+
+SELECT c.Name FROM Customer c
+JOIN CustomerAccount ca ON c.SSN = ca.SSN
+JOIN Account a ON ca.AccountID = a.AccountID
+JOIN Branch1 b ON a.BranchID = b.BranchID
+WHERE b.City = 'Bangalore’;
+
+
